@@ -10,7 +10,7 @@ module namespace page = 'http://AnimePlus+.com';
  :)
 declare
   %rest:POST
-  %rest:path('/AnimePlus+/AnimeName')
+  %rest:path('/AnimePlus+/DeleteAnime')
   %rest:form-param("name","{$name}","(no name)")
   %output:method('html')
   %output:doctype-system('about:legacy-compat')
@@ -43,13 +43,25 @@ function page:FindName(
             </div>
         </div>
 <div>
-<h1>Busqueda: </h1>
+<h1>Eliminar: </h1>
+<br/>
+<form action="/AnimePlus+/DeleteAnime2" method="POST">
+NOMBRE:<input type="text" name="name" value='{$name}'/>
+ID:<input type="number" name="id"/>
+<br/>
+<br/>
+<button type="submit" class="btn btn-danger">Eliminar</button>
+</form>
+<br/>
+<br/>
+<br/>
 <table class="table">
 <thead>
 <tr>
 <th>Nombre</th>
 <th>Tipo</th>
 <th>Fecha</th>
+<th>ID</th>
 </tr>
 </thead>
 <tbody>
@@ -62,6 +74,7 @@ function page:FindName(
   <td>{$b/name/text()}</td> 
  <td>{$b/type/text()}</td>
   <td>{$b/vintage/text()}</td>
+  <td>{$b/id/text()}</td>
   </tr>
 
 }
@@ -70,4 +83,27 @@ function page:FindName(
 </div>
 </body>
 </html>
+};
+
+
+(:~
+ : Generates a welcome page.
+ : @return HTML page
+ :)
+declare
+  %rest:POST
+  %rest:path('/AnimePlus+/DeleteAnime2')
+  %rest:form-param("name","{$name}","(no name)")
+        %rest:form-param("id","{$id}","(no id)")
+updating function page:UpdateName(
+  $name as xs:string,
+   $id as xs:integer
+  
+)
+
+{
+  for $delete in doc("AnimePlus+")//item
+  where $delete/id = $id and $delete/name = $name
+  return  delete node $delete ,
+      update:output(web:redirect('/AnimePlus+'))
 };

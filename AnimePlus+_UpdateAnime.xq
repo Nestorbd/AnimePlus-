@@ -10,7 +10,7 @@ module namespace page = 'http://AnimePlus+.com';
  :)
 declare
   %rest:POST
-  %rest:path('/AnimePlus+/AnimeName')
+  %rest:path('/AnimePlus+/UpdateAnime')
   %rest:form-param("name","{$name}","(no name)")
   %output:method('html')
   %output:doctype-system('about:legacy-compat')
@@ -43,13 +43,29 @@ function page:FindName(
             </div>
         </div>
 <div>
-<h1>Busqueda: </h1>
+<h1>Actualizar: </h1>
+<br/>
+<form action="/AnimePlus+/UpdateAnime2" method="POST">
+NOMBRE:<input type="text" name="name" value='{$name}'/>
+ID:<input type="number" name="id"/>
+<br/>
+<br/>
+TIPO:<input type="text" name="type"/>
+FECHA:<input type="date" name="vintage"/>
+<br/>
+<br/>
+<button type="submit" class="btn btn-success">Actualizar</button>
+</form>
+<br/>
+<br/>
+<br/>
 <table class="table">
 <thead>
 <tr>
 <th>Nombre</th>
 <th>Tipo</th>
 <th>Fecha</th>
+<th>ID</th>
 </tr>
 </thead>
 <tbody>
@@ -62,6 +78,7 @@ function page:FindName(
   <td>{$b/name/text()}</td> 
  <td>{$b/type/text()}</td>
   <td>{$b/vintage/text()}</td>
+  <td>{$b/id/text()}</td>
   </tr>
 
 }
@@ -70,4 +87,38 @@ function page:FindName(
 </div>
 </body>
 </html>
+};
+
+
+(:~
+ : Generates a welcome page.
+ : @return HTML page
+ :)
+declare
+  %rest:POST
+  %rest:path('/AnimePlus+/UpdateAnime2')
+  %rest:form-param("name","{$name}","(no name)")
+      %rest:form-param("type","{$type}","(no type)")
+        %rest:form-param("id","{$id}","(no id)")
+          %rest:form-param("vintage","{$vintage}","(no vintage)")
+updating function page:UpdateName(
+  $name as xs:string,
+   $type as xs:string,
+   $id as xs:integer,
+   $vintage as xs:date
+  
+)
+
+{
+  for $update in doc("AnimePlus+")//item
+  where $update/id = $id and $update/name = $name
+  return  replace node $update with
+    <item>
+        <id>{$id}</id>
+        <type>{$type}</type>
+        <name>{$name}</name>
+        <precision>{$type}</precision>
+        <vintage>{$vintage}</vintage>
+    </item> ,
+      update:output(web:redirect('/AnimePlus+'))
 };

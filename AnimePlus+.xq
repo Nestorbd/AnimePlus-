@@ -2,7 +2,7 @@
  : This module contains some basic examples for RESTXQ annotations.
  : @author BaseX Team
  :)
-module namespace page = 'http://pruebas.com';
+module namespace page = 'http://AnimePlus+.com';
 
 (:~
  : Generates a welcome page.
@@ -41,9 +41,48 @@ function page:start(
             </div>
         </div>
 <div class="container">
+<h1>Buscar:</h1>
 <form action="/AnimePlus+/AnimeName" method="POST">
 NOMBRE:<input type="text" name="name"/>
-<button type="submit">Buscar</button>
+<button type="submit" class="btn btn-primary" >Buscar</button>
+</form>
+<br/>
+<br/>
+<br/>
+</div>
+<div class="container">
+<h1>Añadir:</h1>
+<form action="/AnimePlus+/CreateAnime" method="POST">
+NOMBRE:<input type="text" name="name"/>
+ID:<input type="number" name="id"/>
+GID:<input type="number" name="gid"/>
+<br/>
+<br/>
+TIPO:<input type="text" name="type"/>
+FECHA:<input type="date" name="vintage"/>
+<br/>
+<br/>
+<button type="submit" class="btn btn-warning">Añadir</button>
+</form>
+<br/>
+<br/>
+<br/>
+</div>
+<div class="container">
+<h1>Actualizar:</h1>
+<form action="/AnimePlus+/UpdateAnime" method="POST">
+NOMBRE:<input type="text" name="name"/>
+<button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+<br/>
+<br/>
+<br/>
+</div>
+<div class="container">
+<h1>Eliminar:</h1>
+<form action="/AnimePlus+/DeleteAnime" method="POST">
+NOMBRE:<input type="text" name="name"/>
+<button type="submit" class="btn btn-primary">Buscar</button>
 </form>
 <br/>
 <br/>
@@ -61,7 +100,6 @@ NOMBRE:<input type="text" name="name"/>
 <tbody>
 {
   for $b in doc("AnimePlus+")//item
-  where $b/type/text() = "TV"
   order by $b/name
   return <tr>
   <td>{$b/name/text()}</td> 
